@@ -30,7 +30,8 @@
         "default_panel": "sidebar.html"
     },
     "action": {
-        "default_title": "Workspace Manager"
+        "default_popup": "prompt.html",
+        "default_title": "Quick Command"
     },
     "host_permissions": ["<all_urls>"]
 }

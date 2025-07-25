@@ -1,17 +1,33 @@
-browser.commands.onCommand.addListener(async (command) => {
-  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-  console.log("Active tab:", tab);
+// browser.commands.onCommand.addListener(async (command) => {
+//   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+//   console.log("Active tab:", tab);
 
-  switch (command) {
-    case "custom-action-1":
-      // Do something with the tab
-      console.log("Action 1 triggered on", tab.url);
-      break;
-    case "custom-action-2":
-      // Another action
-      break;
-  }
+//   switch (command) {
+//     case "custom-action-1":
+//       // Do something with the tab
+//       console.log("Action 1 triggered on", tab.url);
+//       break;
+//     case "custom-action-2":
+//       // Another action
+//       break;
+//   }
+// });
+
+browser.commands.onCommand.addListener(() => {
+  console.log("Opening popup...");
+  // Simulate clicking the browser action to open prompt.html
+  browser.openPopup();
 });
+
+// browser.commands.onCommand.addListener(async (command) => {
+//   if (command === "trigger-workspace-input") {
+//     console.log("Workspace input trigger");
+
+//     // EITHER: open a popup, or notify sidebar
+//     // Here we send a message to the sidebar
+//     browser.runtime.sendMessage({ cmd: "awaitingWorkspaceInput" });
+//   }
+// });
 
 
 

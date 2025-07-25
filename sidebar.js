@@ -1,3 +1,32 @@
+let waitingForNumber = false;
+
+browser.runtime.onMessage.addListener((msg) => {
+  if (msg.cmd === "awaitingWorkspaceInput") {
+    waitingForNumber = true;
+    console.log("Press a number key (1–9)");
+  }
+});
+
+let something = prompt("pressanumba");
+console.log(something);
+
+document.addEventListener("keydown", (e) => {
+  if (!waitingForNumber) return;
+  if (e.key >= "1" && e.key <= "9") {
+    console.log("Number pressed:", e.key);
+    waitingForNumber = false;
+
+    // Handle action here:
+    handleWorkspaceInput(parseInt(e.key, 10));
+  }
+});
+
+function handleWorkspaceInput(num) {
+  // Your custom logic for workspace number
+  console.log("Switching to workspace", num);
+}
+
+
 // const list = document.getElementById("workspace-list");
 // const nameInput = document.getElementById("workspace-name");
 // const saveButton = document.getElementById("save-workspace");
