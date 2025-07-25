@@ -14,24 +14,10 @@
     "commands": {
         "custom-action-1": {
             "suggested_key": {
-                "default": "Alt+2"
-            },
-        "description": "something alt 2"
-        },
-        "trigger-workspace-input": {
-            "suggested_key": {
                 "default": "Alt+1"
             },
-        "description": "Trigger workspace input"
+        "description": "something alt 1"
         }
-    },
-    "sidebar_action": {
-        "default_title": "Workspaces",
-        "default_panel": "sidebar.html"
-    },
-    "action": {
-        "default_popup": "prompt.html",
-        "default_title": "Quick Command"
     },
     "host_permissions": ["<all_urls>"]
 }

@@ -1,3 +1,34 @@
+browser.commands.onCommand.addListener(async (command) => {
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+  console.log("Active tab:", tabs);
+
+    // window_schtick();
+    console.log("i was here");
+    browser.windows.getAll().then(windows => {
+        windows.forEach(win => {
+            console.log(win);
+        });
+    });
+    // .forEach((x) => (console.log(x)));
+    console.log("i'm done here");
+
+  switch (command) {
+    case "custom-action-1":
+      tabs.move(20);
+    case "custom-action-2":
+      // Another action
+      break;
+  }
+});
+
+
+function window_schtick() {
+    console.log("i was here");
+    windows.getAll().foreach((x) => (console.log(x)));
+    console.log("i'm done here");
+}
+
+
 // browser.commands.onCommand.addListener(async (command) => {
 //   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
 //   console.log("Active tab:", tab);
@@ -13,11 +44,12 @@
 //   }
 // });
 
-browser.commands.onCommand.addListener(() => {
-  console.log("Opening popup...");
-  // Simulate clicking the browser action to open prompt.html
-  browser.openPopup();
-});
+
+// browser.commands.onCommand.addListener(() => {
+//   console.log("Opening popup...");
+//   // Simulate clicking the browser action to open prompt.html
+//   browser.openPopup();
+// });
 
 // browser.commands.onCommand.addListener(async (command) => {
 //   if (command === "trigger-workspace-input") {
