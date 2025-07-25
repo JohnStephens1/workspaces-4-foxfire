@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Workspace Manager",
+  "version": "1.0",
+  "description": "Manage workspaces of tabs with memory-efficient tab discarding.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "sidebars"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "sidebar_action": {
+    "default_title": "Workspaces",
+    "default_panel": "sidebar.html"
+  },
+  "action": {
+    "default_title": "Workspace Manager"
+  },
+  "host_permissions": ["<all_urls>"]
+}
