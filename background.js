@@ -1,16 +1,14 @@
 browser.commands.onCommand.addListener(async (command) => {
+//   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  console.log("Active tab:", tabs);
+  const windows = browser.windows.getAll('true');
+  console.log(windows);
+//   tabs.hide()
+//   console.log("hidden?")
+//   tabs.forEach(tab => {
+//     tab.hide();
+//   })
 
-    // window_schtick();
-    console.log("i was here");
-    browser.windows.getAll().then(windows => {
-        windows.forEach(win => {
-            console.log(win);
-        });
-    });
-    // .forEach((x) => (console.log(x)));
-    console.log("i'm done here");
 
   switch (command) {
     case "custom-action-1":
@@ -24,8 +22,11 @@ browser.commands.onCommand.addListener(async (command) => {
 
 function window_schtick() {
     console.log("i was here");
-    windows.getAll().foreach((x) => (console.log(x)));
-    console.log("i'm done here");
+    browser.windows.getAll().then(windows => {
+        windows.forEach(win => {
+            console.log(win.id);
+        });
+    });
 }
 
 
