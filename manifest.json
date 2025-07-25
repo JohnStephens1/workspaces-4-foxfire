@@ -1,22 +1,36 @@
 {
-  "manifest_version": 3,
-  "name": "Tab Workspace Manager",
-  "version": "1.0",
-  "description": "Manage workspaces of tabs with memory-efficient tab discarding.",
-  "permissions": [
-    "tabs",
-    "storage",
-    "sidebars"
-  ],
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "sidebar_action": {
-    "default_title": "Workspaces",
-    "default_panel": "sidebar.html"
-  },
-  "action": {
-    "default_title": "Workspace Manager"
-  },
-  "host_permissions": ["<all_urls>"]
+    "manifest_version": 3,
+    "name": "Tab Workspace Manager",
+    "version": "1.0",
+    "description": "Manage workspaces of tabs with memory-efficient tab discarding.",
+    "permissions": [
+        "tabs",
+        "storage",
+        "sidebars"
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "commands": {
+        "custom-action-1": {
+            "suggested_key": {
+                "default": "Alt+2"
+            },
+        "description": "something alt 2"
+        },
+        "trigger-workspace-input": {
+            "suggested_key": {
+                "default": "Alt+1"
+            },
+        "description": "Trigger workspace input"
+        }
+    },
+    "sidebar_action": {
+        "default_title": "Workspaces",
+        "default_panel": "sidebar.html"
+    },
+    "action": {
+        "default_title": "Workspace Manager"
+    },
+    "host_permissions": ["<all_urls>"]
 }
