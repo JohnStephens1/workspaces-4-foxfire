@@ -15,7 +15,7 @@ browser.commands.onCommand.addListener(async (command) => {
 });
 
 async function move_tabs_anywhere_at_all() {
-  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+  const tabs = await browser.tabs.query({ highlighted: true, currentWindow: true });
   const windows = await browser.windows.getAll({ populate: true });
   const window_ids = windows.map(window => window.id);
 

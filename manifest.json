@@ -5,6 +5,7 @@
     "description": "Manage workspaces of tabs with memory-efficient tab discarding.",
     "permissions": [
         "tabs",
+        "tabGroups",
         "tabHide",
         "storage"
     ],
