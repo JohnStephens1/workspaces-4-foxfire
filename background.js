@@ -16,7 +16,7 @@ async function move_tabs_anywhere_at_all() {
   }
 }
 
-async function tab_group_schtick() {
+async function tab_group_schtick_old() {
   /*
   browser.tabs.group(
     createProperties: pbb no?,
@@ -54,7 +54,7 @@ async function tab_group_schtick() {
   const group = await get_group(le_group_id);
 
     // @ts-ignore
-  console.log(await browser.tabGroups.query({title: group_name.toString()}))
+  const does_group_exist = await browser.tabGroups.query({title: group_name});
 
   for (const tab of tabs) {
     const group = await get_group(le_group_id);
@@ -71,6 +71,30 @@ async function tab_group_schtick() {
       // @ts-ignore
       browser.tabGroups.update(actual_group_id, {color: 'red', title: le_group_id.toString()});
       // browser.tabs.group({'groupId': le_group_id, 'tabIds': tab_ids});// @ts-ignore
+    }
+  }
+}
+
+async function tab_group_schtick() {
+  const group_name = "1";
+  const group_color = "red";
+  const tabs = await get_selected_tabs();
+  const tab_ids = tabs.map(({ id }) => id);
+  // @ts-ignore
+  const group = await browser.tabGroups.query({title: group_name});
+  console.log(group)
+
+  for (const tab of tabs) {
+    if (group.length) {
+      // @ts-ignore
+      browser.tabs.group({'groupId': group[0]?.id, 'tabIds': tab_ids});// @ts-ignore
+      console.log("y am i here?")
+    } else {
+      // @ts-ignore
+      // const le_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: tab.windowId}});
+      const le_id = await browser.tabs.group({tabIds: tab_ids});
+      // @ts-ignore
+      browser.tabGroups.update(le_id, {color: group_color, title: group_name});
     }
   }
 }
