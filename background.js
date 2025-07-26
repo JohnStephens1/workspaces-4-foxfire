@@ -1,33 +1,30 @@
+// @ts-check
 browser.commands.onCommand.addListener(async (command) => {
+  move_tabs_anywhere_at_all();
+  return;
 //   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  const windows = browser.windows.getAll('true');
-  console.log(windows);
-//   tabs.hide()
-//   console.log("hidden?")
-//   tabs.forEach(tab => {
-//     tab.hide();
-//   })
-
-
-  switch (command) {
-    case "custom-action-1":
-      tabs.move(20);
-    case "custom-action-2":
-      // Another action
-      break;
-  }
+  console.log("tabs", tabs);
+  const tab_ids = tabs.map(tab => tab.id);
+  console.log("tab_ids", tab_ids);
+  const windows = await browser.windows.getAll({ populate: true });
+  windows
+  console.log("windows", windows);
+  console.log("gimme info", windows[0].id);
+  await browser.tabs.move(tab_ids, { windowId: 44, index: -1 });
 });
 
+async function move_tabs_anywhere_at_all() {
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+  const windows = await browser.windows.getAll({ populate: true });
+  const window_ids = windows.map(window => window.id);
 
-function window_schtick() {
-    console.log("i was here");
-    browser.windows.getAll().then(windows => {
-        windows.forEach(win => {
-            console.log(win.id);
-        });
-    });
+  for (const tab of tabs) {
+    const free_window_id = window_ids.find(window_id => window_id !== tab.windowId);
+    await browser.tabs.move(tab.id, { windowId: free_window_id, index: -1 });
+  }
 }
+
 
 
 // browser.commands.onCommand.addListener(async (command) => {
