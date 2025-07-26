@@ -13,11 +13,17 @@
         "scripts": ["background.js"]
     },
     "commands": {
-        "custom-action-1": {
+        "1": {
             "suggested_key": {
                 "default": "Alt+1"
             },
-        "description": "something alt 1"
+            "description": "something"
+        },
+        "2": {
+            "suggested_key": {
+                "default": "Alt+2"
+            },
+            "description": "something"
         }
     },
     "host_permissions": ["<all_urls>"]

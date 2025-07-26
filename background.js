@@ -1,10 +1,42 @@
 // @ts-check
 browser.commands.onCommand.addListener(async (command) => {
-  console.log("base window schtick", await base_window_schtick());
-  console.log("base window schtick", await base_window_schtick());
+  const base_window_id = await base_window_schtick();
   // move_tabs_anywhere_at_all();
   // tab_group_schtick();
+
+  switch (command) {
+    case "1":
+      full_case_1();
+      break;
+    case "2":
+      // store_retrieve_group(2, 1, 2);
+      break;
+  }
 });
+
+
+async function full_case_1() {
+  // current window, get tabs, id
+  const current_win = await browser.windows.getCurrent({populate: true});
+  console.log(current_win);
+  // store current groups
+  const present_group_ids = [...new Set(
+    current_win.tabs
+      .map(tab => tab.groupId)
+      .filter(groupId => groupId !== -1)
+  )];
+
+  console.log(present_group_ids);
+
+  // for (const tab of current_win.tabs) {
+  //   if tab.groupId !== -1 {
+  //     // we got a tab
+  //     // store group_id
+  //   }
+  // }
+
+}
+
 
 async function store_retrieve_group(current_group_id, target_group_id, current_window_id) {
   const base_window_id = await base_window_schtick();
