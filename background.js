@@ -1,18 +1,78 @@
 // @ts-check
-browser.commands.onCommand.addListener(async (command) => {
-  const base_window_id = await base_window_schtick();
-  // move_tabs_anywhere_at_all();
-  // tab_group_schtick();
 
+
+let storage = {};
+
+
+browser.commands.onCommand.addListener(async (command) => {
+  show_all_tabs();
   switch (command) {
     case "1":
-      full_case_1();
       break;
     case "2":
-      // store_retrieve_group(2, 1, 2);
       break;
+    case "3":
+      break;
+    case "4":
+      break;
+    case "5":
+      break;
+    case "6":
+      break;
+    case "7":
+      break;
+    case "8":
+      break;
+    case "9":
+      break;
+    case "show-all-tabs":
+      show_all_tabs();
   }
 });
+
+async function something_save(command) {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  const visible_tabs = tabs.filter(tab => tab.hidden == false);
+  storage[command] = visible_tabs;
+}
+
+
+async function make_me_smile() {
+  const current_win = await browser.windows.getCurrent({populate: true});
+  console.log(current_win.tabs);
+  [{hello: 'potato'}][0].hello
+  const tab_ids = current_win.tabs.map(({ id }) => id);
+  browser.tabs.hide(tab_ids);
+  // for (const tab of current_win.tabs) {
+    
+  // }
+  console.log("fk u")
+}
+
+
+async function something_visibility() {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  const visible_tabs = tabs.filter(tab => tab.hidden == false);
+    // browser.tabs.hide(tab_ids);
+
+}
+
+
+async function hide_all_tabs() {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  const tab_ids = tabs.map(({ id }) => id);
+  browser.tabs.hide(tab_ids);
+}
+
+
+async function show_all_tabs() {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  const tab_ids = tabs.map(({ id }) => id);
+  browser.tabs.show(tab_ids);
+}
+
+
+
 
 
 async function full_case_1() {
@@ -20,13 +80,13 @@ async function full_case_1() {
   const current_win = await browser.windows.getCurrent({populate: true});
   console.log(current_win);
   // store current groups
-  const present_group_ids = [...new Set(
-    current_win.tabs
-      .map(tab => tab.groupId)
-      .filter(groupId => groupId !== -1)
-  )];
+  // const present_group_ids = [...new Set(
+  //   current_win.tabs
+  //     .map(tab => tab.groupId)
+  //     .filter(groupId => groupId !== -1)
+  // )];
 
-  console.log(present_group_ids);
+  // console.log(present_group_ids);
 
   // for (const tab of current_win.tabs) {
   //   if tab.groupId !== -1 {

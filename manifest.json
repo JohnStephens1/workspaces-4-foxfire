@@ -24,6 +24,12 @@
                 "default": "Alt+2"
             },
             "description": "something"
+        },
+        "show-all-tabs": {
+            "suggested_key": {
+                "default": "ctrl+shift+h"
+            },
+            "description": "something"
         }
     },
     "host_permissions": ["<all_urls>"]
