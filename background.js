@@ -1,6 +1,6 @@
 // @ts-check
 browser.commands.onCommand.addListener(async (command) => {
-  move_tabs_anywhere_at_all();
+  // move_tabs_anywhere_at_all();
   tab_group_schtick();
 });
 
@@ -17,7 +17,62 @@ async function move_tabs_anywhere_at_all() {
 }
 
 async function tab_group_schtick() {
+  /*
+  browser.tabs.group(
+    createProperties: pbb no?,
+    windowId: specific or current,
+    groupId: target group id,else created,
+    tabIds
+  )
+  tabGroups.Color, move, query, update ...
+  https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabGroups
+  https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/group
+  */
 
+  const le_group_id = 1;
+  const group_name = "1";
+ 
+  const tabs = await get_selected_tabs();
+  const tab_ids = tabs.map(({ id }) => id);
+
+  
+  // browser.tabs.group()
+  // colors blue,cyan,grey,green,orange,pink,purple,red,yellow,
+  
+  // @ts-ignore
+  // browser.tabs.group({
+  //   'groupId': 1,
+  //   'tabIds': tab_ids
+  // });
+  // tabs.group()
+  // const tab_ids = tabs.map(tab => tab.id);
+
+  // await browser.tabGroups.create({ tabIds: tab_ids });
+    // @ts-ignore
+  const get_group = async (group_id) => browser.tabGroups.get(group_id).then(group => group).catch(() => undefined);
+    // @ts-ignore
+  const group = await get_group(le_group_id);
+
+    // @ts-ignore
+  console.log(await browser.tabGroups.query({title: group_name.toString()}))
+
+  for (const tab of tabs) {
+    const group = await get_group(le_group_id);
+    if (group) {
+      // @ts-ignore
+      browser.tabs.group({'groupId': le_group_id, 'tabIds': tab_ids});// @ts-ignore
+      
+      // add tab to group
+    } else {
+      // create group
+      // add tab to group
+      // @ts-ignore
+      const actual_group_id = await browser.tabs.group({'tabIds': tab_ids});
+      // @ts-ignore
+      browser.tabGroups.update(actual_group_id, {color: 'red', title: le_group_id.toString()});
+      // browser.tabs.group({'groupId': le_group_id, 'tabIds': tab_ids});// @ts-ignore
+    }
+  }
 }
 
 function get_all_windows() {
