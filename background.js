@@ -4,6 +4,28 @@ browser.commands.onCommand.addListener(async (command) => {
   tab_group_schtick();
 });
 
+async function tab_group_schtick() {
+  const group_name = "1";
+  const group_color = "red";
+
+  // @ts-ignore
+  const group = await browser.tabGroups.query({title: group_name});
+
+  const tabs = await get_selected_tabs();
+  const tab_ids = tabs.map(({ id }) => id);
+
+  if (group.length) {
+    // @ts-ignore
+    browser.tabs.group({'groupId': group[0]?.id, 'tabIds': tab_ids});
+  } else {
+    // @ts-ignore
+    // const le_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: tab.windowId}});
+    const group_id = await browser.tabs.group({tabIds: tab_ids});
+    // @ts-ignore
+    browser.tabGroups.update(group_id, {color: group_color, title: group_name});
+  }
+}
+
 async function move_tabs_anywhere_at_all() {
   // browser.tabs.discard(tabIds)  # this frees their memory
   const tabs = await get_selected_tabs();
@@ -13,89 +35,6 @@ async function move_tabs_anywhere_at_all() {
   for (const tab of tabs) {
     const free_window_id = window_ids.find(window_id => window_id !== tab.windowId);
     await browser.tabs.move(tab.id, { windowId: free_window_id, index: -1 });
-  }
-}
-
-async function tab_group_schtick_old() {
-  /*
-  browser.tabs.group(
-    createProperties: pbb no?,
-    windowId: specific or current,
-    groupId: target group id,else created,
-    tabIds
-  )
-  tabGroups.Color, move, query, update ...
-  https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabGroups
-  https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/group
-  */
-
-  const le_group_id = 1;
-  const group_name = "1";
- 
-  const tabs = await get_selected_tabs();
-  const tab_ids = tabs.map(({ id }) => id);
-
-  
-  // browser.tabs.group()
-  // colors blue,cyan,grey,green,orange,pink,purple,red,yellow,
-  
-  // @ts-ignore
-  // browser.tabs.group({
-  //   'groupId': 1,
-  //   'tabIds': tab_ids
-  // });
-  // tabs.group()
-  // const tab_ids = tabs.map(tab => tab.id);
-
-  // await browser.tabGroups.create({ tabIds: tab_ids });
-    // @ts-ignore
-  const get_group = async (group_id) => browser.tabGroups.get(group_id).then(group => group).catch(() => undefined);
-    // @ts-ignore
-  const group = await get_group(le_group_id);
-
-    // @ts-ignore
-  const does_group_exist = await browser.tabGroups.query({title: group_name});
-
-  for (const tab of tabs) {
-    const group = await get_group(le_group_id);
-    if (group) {
-      // @ts-ignore
-      browser.tabs.group({'groupId': le_group_id, 'tabIds': tab_ids});// @ts-ignore
-      
-      // add tab to group
-    } else {
-      // create group
-      // add tab to group
-      // @ts-ignore
-      const actual_group_id = await browser.tabs.group({'tabIds': tab_ids});
-      // @ts-ignore
-      browser.tabGroups.update(actual_group_id, {color: 'red', title: le_group_id.toString()});
-      // browser.tabs.group({'groupId': le_group_id, 'tabIds': tab_ids});// @ts-ignore
-    }
-  }
-}
-
-async function tab_group_schtick() {
-  const group_name = "1";
-  const group_color = "red";
-  const tabs = await get_selected_tabs();
-  const tab_ids = tabs.map(({ id }) => id);
-  // @ts-ignore
-  const group = await browser.tabGroups.query({title: group_name});
-  console.log(group)
-
-  for (const tab of tabs) {
-    if (group.length) {
-      // @ts-ignore
-      browser.tabs.group({'groupId': group[0]?.id, 'tabIds': tab_ids});// @ts-ignore
-      console.log("y am i here?")
-    } else {
-      // @ts-ignore
-      // const le_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: tab.windowId}});
-      const le_id = await browser.tabs.group({tabIds: tab_ids});
-      // @ts-ignore
-      browser.tabGroups.update(le_id, {color: group_color, title: group_name});
-    }
   }
 }
 
@@ -171,3 +110,66 @@ function get_selected_tabs() {
 //   if (msg.cmd === 'save') saveWorkspace(msg.name);
 //   if (msg.cmd === 'load') loadWorkspace(msg.name);
 // });
+
+
+
+
+
+// async function tab_group_schtick_old() {
+//   /*
+//   browser.tabs.group(
+//     createProperties: pbb no?,
+//     windowId: specific or current,
+//     groupId: target group id,else created,
+//     tabIds
+//   )
+//   tabGroups.Color, move, query, update ...
+//   https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabGroups
+//   https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/group
+//   */
+
+//   const le_group_id = 1;
+//   const group_name = "1";
+ 
+//   const tabs = await get_selected_tabs();
+//   const tab_ids = tabs.map(({ id }) => id);
+
+  
+//   // browser.tabs.group()
+//   // colors blue,cyan,grey,green,orange,pink,purple,red,yellow,
+  
+//   // @ts-ignore
+//   // browser.tabs.group({
+//   //   'groupId': 1,
+//   //   'tabIds': tab_ids
+//   // });
+//   // tabs.group()
+//   // const tab_ids = tabs.map(tab => tab.id);
+
+//   // await browser.tabGroups.create({ tabIds: tab_ids });
+//     // @ts-ignore
+//   const get_group = async (group_id) => browser.tabGroups.get(group_id).then(group => group).catch(() => undefined);
+//     // @ts-ignore
+//   const group = await get_group(le_group_id);
+
+//     // @ts-ignore
+//   const does_group_exist = await browser.tabGroups.query({title: group_name});
+
+//   for (const tab of tabs) {
+//     const group = await get_group(le_group_id);
+//     if (group) {
+//       // @ts-ignore
+//       browser.tabs.group({'groupId': le_group_id, 'tabIds': tab_ids});// @ts-ignore
+      
+//       // add tab to group
+//     } else {
+//       // create group
+//       // add tab to group
+//       // @ts-ignore
+//       const actual_group_id = await browser.tabs.group({'tabIds': tab_ids});
+//       // @ts-ignore
+//       browser.tabGroups.update(actual_group_id, {color: 'red', title: le_group_id.toString()});
+//       // browser.tabs.group({'groupId': le_group_id, 'tabIds': tab_ids});// @ts-ignore
+//     }
+//   }
+// }
