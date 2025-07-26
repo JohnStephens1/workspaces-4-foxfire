@@ -6,6 +6,26 @@ browser.commands.onCommand.addListener(async (command) => {
   // tab_group_schtick();
 });
 
+async function store_retrieve_group(current_group_id, target_group_id, current_window_id) {
+  const base_window_id = await base_window_schtick();
+  get_group(target_group_id, current_window_id);
+  store_group(current_group_id);
+}
+
+
+async function store_group(group_id) {
+  const base_window_id = await base_window_schtick();
+
+  // @ts-ignore
+  browser.tabGroups.move(group_id, {index: -1, windowId: base_window_id});
+}
+
+
+async function get_group(group_id, current_window_id) {
+  // @ts-ignore
+  browser.tabGroups.move(group_id, {index: -1, windowId: current_window_id});
+}
+
 
 async function base_window_schtick() {
   const base_group_name = "0";
