@@ -1,8 +1,42 @@
 // @ts-check
 browser.commands.onCommand.addListener(async (command) => {
+  console.log("base window schtick", await base_window_schtick());
+  console.log("base window schtick", await base_window_schtick());
   // move_tabs_anywhere_at_all();
-  tab_group_schtick();
+  // tab_group_schtick();
 });
+
+
+async function base_window_schtick() {
+  const base_group_name = "0";
+  const base_group_color = "blue";
+  // @ts-ignore
+  const group = await browser.tabGroups.query({title: base_group_name});
+
+  if (group.length) {
+    // @ts-ignore
+    // browser.tabGroups.update(group[0].id, {collapsed: true});
+
+    return group[0].windowId;
+  } else {
+    // create le window
+    const le_window = await browser.windows.create({
+      focused: false,
+      state: "minimized"
+    })
+    const le_window_id = le_window.id;
+    // console.log("tabs", le_window.tabs)
+    const tab_ids = le_window.tabs.map(({ id }) => id);
+    // @ts-ignore
+    const group_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: le_window_id}});
+    // @ts-ignore
+    // browser.tabGroups.update(group_id, {color: base_group_color, title: base_group_name, collapsed: true});
+    browser.tabGroups.update(group_id, {color: base_group_color, title: base_group_name});
+
+    return le_window_id;
+  }
+}
+
 
 async function tab_group_schtick() {
   const group_name = "1";
