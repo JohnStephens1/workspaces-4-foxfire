@@ -1,22 +1,13 @@
 // @ts-check
 browser.commands.onCommand.addListener(async (command) => {
   move_tabs_anywhere_at_all();
-  return;
-//   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  console.log("tabs", tabs);
-  const tab_ids = tabs.map(tab => tab.id);
-  console.log("tab_ids", tab_ids);
-  const windows = await browser.windows.getAll({ populate: true });
-  windows
-  console.log("windows", windows);
-  console.log("gimme info", windows[0].id);
-  await browser.tabs.move(tab_ids, { windowId: 44, index: -1 });
+  tab_group_schtick();
 });
 
 async function move_tabs_anywhere_at_all() {
-  const tabs = await browser.tabs.query({ highlighted: true, currentWindow: true });
-  const windows = await browser.windows.getAll({ populate: true });
+  // browser.tabs.discard(tabIds)  # this frees their memory
+  const tabs = await get_selected_tabs();
+  const windows = await get_all_windows();
   const window_ids = windows.map(window => window.id);
 
   for (const tab of tabs) {
@@ -25,22 +16,21 @@ async function move_tabs_anywhere_at_all() {
   }
 }
 
+async function tab_group_schtick() {
+
+}
+
+function get_all_windows() {
+  return browser.windows.getAll({ populate: true });
+}
+
+function get_selected_tabs() {
+  return browser.tabs.query({ highlighted: true, currentWindow: true });
+}
 
 
-// browser.commands.onCommand.addListener(async (command) => {
-//   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-//   console.log("Active tab:", tab);
 
-//   switch (command) {
-//     case "custom-action-1":
-//       // Do something with the tab
-//       console.log("Action 1 triggered on", tab.url);
-//       break;
-//     case "custom-action-2":
-//       // Another action
-//       break;
-//   }
-// });
+
 
 
 // browser.commands.onCommand.addListener(() => {
