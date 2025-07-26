@@ -2,31 +2,26 @@
 
 
 let storage = {};
+let active = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+
+function is_number(string) {
+  return !isNaN(parseInt(string));
+
+}
 
 
 browser.commands.onCommand.addListener(async (command) => {
   show_all_tabs();
+
+  if (is_number(command)) {
+    //something switch or something
+  }
+
   switch (command) {
-    case "1":
-      break;
-    case "2":
-      break;
-    case "3":
-      break;
-    case "4":
-      break;
-    case "5":
-      break;
-    case "6":
-      break;
-    case "7":
-      break;
-    case "8":
-      break;
-    case "9":
-      break;
     case "show-all-tabs":
       show_all_tabs();
+      break;
   }
 });
 
@@ -35,6 +30,34 @@ async function something_save(command) {
   const visible_tabs = tabs.filter(tab => tab.hidden == false);
   storage[command] = visible_tabs;
 }
+
+async function something_switch(command) {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  const visible_tabs = tabs.filter(tab => tab.hidden == false);
+  storage[command] = visible_tabs;
+
+  
+}
+
+async function get_visible_tabs() {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  const visible_tabs = tabs.filter(tab => tab.hidden == false);
+  return visible_tabs;
+}
+
+function set_active_workspace(command) {
+  active = active.fill(0);
+  active[parseInt(command)] = 1;
+}
+
+function get_active_workspace(command) {
+  return active.findIndex(x => x == 1);
+}
+
+
+
+
+
 
 
 async function make_me_smile() {
