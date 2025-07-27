@@ -25,6 +25,48 @@
             },
             "description": "something"
         },
+        "3": {
+            "suggested_key": {
+                "default": "Alt+3"
+            },
+            "description": "something"
+        },
+        "4": {
+            "suggested_key": {
+                "default": "Alt+4"
+            },
+            "description": "something"
+        },
+        "5": {
+            "suggested_key": {
+                "default": "Alt+5"
+            },
+            "description": "something"
+        },
+        "6": {
+            "suggested_key": {
+                "default": "Alt+6"
+            },
+            "description": "something"
+        },
+        "7": {
+            "suggested_key": {
+                "default": "Alt+7"
+            },
+            "description": "something"
+        },
+        "8": {
+            "suggested_key": {
+                "default": "Alt+8"
+            },
+            "description": "something"
+        },
+        "9": {
+            "suggested_key": {
+                "default": "Alt+9"
+            },
+            "description": "something"
+        },
         "show-all-tabs": {
             "suggested_key": {
                 "default": "Alt+G"
