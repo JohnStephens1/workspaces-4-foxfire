@@ -68,8 +68,6 @@ async function something_switch(command) {
   const tabs = await browser.tabs.query({ currentWindow: true });
   const visible_tabs = tabs.filter(tab => tab.hidden == false);
   storage[command] = visible_tabs;
-
-  
 }
 
 async function get_visible_tabs() {
@@ -135,10 +133,10 @@ async function show_all_tabs() {
 
 
 
-async function full_case_1() {
+// async function full_case_1() {
   // current window, get tabs, id
-  const current_win = await browser.windows.getCurrent({populate: true});
-  console.log(current_win);
+  // const current_win = await browser.windows.getCurrent({populate: true});
+  // console.log(current_win);
   // store current groups
   // const present_group_ids = [...new Set(
   //   current_win.tabs
@@ -155,102 +153,102 @@ async function full_case_1() {
   //   }
   // }
 
-}
+// }
 
 
-async function store_retrieve_group(current_group_id, target_group_id, current_window_id) {
-  const base_window_id = await base_window_schtick();
-  get_group(target_group_id, current_window_id);
-  store_group(current_group_id);
-}
+// async function store_retrieve_group(current_group_id, target_group_id, current_window_id) {
+//   const base_window_id = await base_window_schtick();
+//   get_group(target_group_id, current_window_id);
+//   store_group(current_group_id);
+// }
 
 
-async function store_group(group_id) {
-  const base_window_id = await base_window_schtick();
+// async function store_group(group_id) {
+//   const base_window_id = await base_window_schtick();
 
-  // @ts-ignore
-  browser.tabGroups.move(group_id, {index: -1, windowId: base_window_id});
-}
-
-
-async function get_group(group_id, current_window_id) {
-  // @ts-ignore
-  browser.tabGroups.move(group_id, {index: -1, windowId: current_window_id});
-}
+//   // @ts-ignore
+//   browser.tabGroups.move(group_id, {index: -1, windowId: base_window_id});
+// }
 
 
-async function base_window_schtick() {
-  const base_group_name = "0";
-  const base_group_color = "blue";
-  // @ts-ignore
-  const group = await browser.tabGroups.query({title: base_group_name});
-
-  if (group.length) {
-    // @ts-ignore
-    // browser.tabGroups.update(group[0].id, {collapsed: true});
-
-    return group[0].windowId;
-  } else {
-    // create le window
-    const le_window = await browser.windows.create({
-      focused: false,
-      state: "minimized"
-    })
-    const le_window_id = le_window.id;
-    // console.log("tabs", le_window.tabs)
-    const tab_ids = le_window.tabs.map(({ id }) => id);
-    // @ts-ignore
-    const group_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: le_window_id}});
-    // @ts-ignore
-    // browser.tabGroups.update(group_id, {color: base_group_color, title: base_group_name, collapsed: true});
-    browser.tabGroups.update(group_id, {color: base_group_color, title: base_group_name});
-
-    return le_window_id;
-  }
-}
+// async function get_group(group_id, current_window_id) {
+//   // @ts-ignore
+//   browser.tabGroups.move(group_id, {index: -1, windowId: current_window_id});
+// }
 
 
-async function tab_group_schtick() {
-  const group_name = "1";
-  const group_color = "red";
+// async function base_window_schtick() {
+//   const base_group_name = "0";
+//   const base_group_color = "blue";
+//   // @ts-ignore
+//   const group = await browser.tabGroups.query({title: base_group_name});
 
-  // @ts-ignore
-  const group = await browser.tabGroups.query({title: group_name});
+//   if (group.length) {
+//     // @ts-ignore
+//     // browser.tabGroups.update(group[0].id, {collapsed: true});
 
-  const tabs = await get_selected_tabs();
-  const tab_ids = tabs.map(({ id }) => id);
+//     return group[0].windowId;
+//   } else {
+//     // create le window
+//     const le_window = await browser.windows.create({
+//       focused: false,
+//       state: "minimized"
+//     })
+//     const le_window_id = le_window.id;
+//     // console.log("tabs", le_window.tabs)
+//     const tab_ids = le_window.tabs.map(({ id }) => id);
+//     // @ts-ignore
+//     const group_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: le_window_id}});
+//     // @ts-ignore
+//     // browser.tabGroups.update(group_id, {color: base_group_color, title: base_group_name, collapsed: true});
+//     browser.tabGroups.update(group_id, {color: base_group_color, title: base_group_name});
 
-  if (group.length) {
-    // @ts-ignore
-    browser.tabs.group({'groupId': group[0]?.id, 'tabIds': tab_ids});
-  } else {
-    // @ts-ignore
-    // const le_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: tab.windowId}});
-    const group_id = await browser.tabs.group({tabIds: tab_ids});
-    // @ts-ignore
-    browser.tabGroups.update(group_id, {color: group_color, title: group_name});
-  }
-}
+//     return le_window_id;
+//   }
+// }
 
-async function move_tabs_anywhere_at_all() {
-  // browser.tabs.discard(tabIds)  # this frees their memory
-  const tabs = await get_selected_tabs();
-  const windows = await get_all_windows();
-  const window_ids = windows.map(window => window.id);
 
-  for (const tab of tabs) {
-    const free_window_id = window_ids.find(window_id => window_id !== tab.windowId);
-    await browser.tabs.move(tab.id, { windowId: free_window_id, index: -1 });
-  }
-}
+// async function tab_group_schtick() {
+//   const group_name = "1";
+//   const group_color = "red";
 
-function get_all_windows() {
-  return browser.windows.getAll({ populate: true });
-}
+//   // @ts-ignore
+//   const group = await browser.tabGroups.query({title: group_name});
 
-function get_selected_tabs() {
-  return browser.tabs.query({ highlighted: true, currentWindow: true });
-}
+//   const tabs = await get_selected_tabs();
+//   const tab_ids = tabs.map(({ id }) => id);
+
+//   if (group.length) {
+//     // @ts-ignore
+//     browser.tabs.group({'groupId': group[0]?.id, 'tabIds': tab_ids});
+//   } else {
+//     // @ts-ignore
+//     // const le_id = await browser.tabs.group({tabIds: tab_ids, createProperties: {windowId: tab.windowId}});
+//     const group_id = await browser.tabs.group({tabIds: tab_ids});
+//     // @ts-ignore
+//     browser.tabGroups.update(group_id, {color: group_color, title: group_name});
+//   }
+// }
+
+// async function move_tabs_anywhere_at_all() {
+//   // browser.tabs.discard(tabIds)  # this frees their memory
+//   const tabs = await get_selected_tabs();
+//   const windows = await get_all_windows();
+//   const window_ids = windows.map(window => window.id);
+
+//   for (const tab of tabs) {
+//     const free_window_id = window_ids.find(window_id => window_id !== tab.windowId);
+//     await browser.tabs.move(tab.id, { windowId: free_window_id, index: -1 });
+//   }
+// }
+
+// function get_all_windows() {
+//   return browser.windows.getAll({ populate: true });
+// }
+
+// function get_selected_tabs() {
+//   return browser.tabs.query({ highlighted: true, currentWindow: true });
+// }
 
 
 
