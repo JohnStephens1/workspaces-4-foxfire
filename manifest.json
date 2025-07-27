@@ -1,5 +1,5 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "Tab Workspace Manager",
     "version": "1.0",
     "description": "Manage workspaces of tabs with memory-efficient tab discarding.",
@@ -72,6 +72,11 @@
                 "default": "Alt+G"
             },
             "description": "something"
+        }
+    },
+    "applications": {
+        "gecko": {
+            "id": "ima-potato@isamail.com"
         }
     },
     "host_permissions": ["<all_urls>"]
