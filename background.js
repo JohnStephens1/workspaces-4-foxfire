@@ -1,21 +1,20 @@
 // @ts-check
 
 
-let storage = {};
+// let storage = {0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}};
+let storage = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []};
 let active = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
 function is_number(string) {
   return !isNaN(parseInt(string));
-
 }
 
 
 browser.commands.onCommand.addListener(async (command) => {
-  show_all_tabs();
-
+  // show_all_tabs();
   if (is_number(command)) {
-    //something switch or something
+    tab_shenanigans(command);
   }
 
   switch (command) {
@@ -24,6 +23,40 @@ browser.commands.onCommand.addListener(async (command) => {
       break;
   }
 });
+
+
+
+async function tab_shenanigans(command) {
+  // store current
+  const active_workspace = get_active_workspace();
+  if (active_workspace == command) return;
+
+  const visible_tabs = await get_visible_tabs();
+  storage[active_workspace] = visible_tabs;
+
+  // hide schtick avoidance
+  const temp_tab = await browser.tabs.create({});
+  const temp_tab_id = temp_tab.id;
+
+  // get selected
+  const new_tabs = storage[command];
+
+  console.log(1);
+  const new_tab_ids = new_tabs.map(({ id }) => id);
+  browser.tabs.show(new_tab_ids);
+
+  console.log(2);
+  const old_tab_ids = visible_tabs.map(({ id }) => id);
+  browser.tabs.hide(old_tab_ids);
+  set_active_workspace(command);
+  console.log(3);
+  // kill bs tab again
+  const remaining_visible_tabs = await get_visible_tabs();
+  if (remaining_visible_tabs.length > 1) {
+    browser.tabs.remove(temp_tab_id);
+  }
+}
+
 
 async function something_save(command) {
   const tabs = await browser.tabs.query({ currentWindow: true });
@@ -50,8 +83,10 @@ function set_active_workspace(command) {
   active[parseInt(command)] = 1;
 }
 
-function get_active_workspace(command) {
-  return active.findIndex(x => x == 1);
+function get_active_workspace() {
+  const index = active.findIndex(x => x == 1);
+  if (index == -1) return 1;
+  return index;
 }
 
 
@@ -92,6 +127,8 @@ async function show_all_tabs() {
   const tabs = await browser.tabs.query({ currentWindow: true });
   const tab_ids = tabs.map(({ id }) => id);
   browser.tabs.show(tab_ids);
+  storage = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []};
+  active = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 }
 
 

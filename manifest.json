@@ -27,7 +27,7 @@
         },
         "show-all-tabs": {
             "suggested_key": {
-                "default": "ctrl+shift+h"
+                "default": "Alt+G"
             },
             "description": "something"
         }
