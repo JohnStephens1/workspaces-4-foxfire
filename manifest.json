@@ -77,5 +77,8 @@
         "gecko": {
             "id": "ima-potato@isamail.com"
         }
+    },
+    "icons": {
+        "48": "le_face_48_2.png"
     }
 }
