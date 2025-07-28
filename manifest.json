@@ -16,61 +16,61 @@
             "suggested_key": {
                 "default": "Alt+1"
             },
-            "description": "something"
+            "description": "shortcut for workspace 1"
         },
         "2": {
             "suggested_key": {
                 "default": "Alt+2"
             },
-            "description": "something"
+            "description": "shortcut for workspace 2"
         },
         "3": {
             "suggested_key": {
                 "default": "Alt+3"
             },
-            "description": "something"
+            "description": "shortcut for workspace 3"
         },
         "4": {
             "suggested_key": {
                 "default": "Alt+4"
             },
-            "description": "something"
+            "description": "shortcut for workspace 4"
         },
         "5": {
             "suggested_key": {
                 "default": "Alt+5"
             },
-            "description": "something"
+            "description": "shortcut for workspace 5"
         },
         "6": {
             "suggested_key": {
                 "default": "Alt+6"
             },
-            "description": "something"
+            "description": "shortcut for workspace 6"
         },
         "7": {
             "suggested_key": {
                 "default": "Alt+7"
             },
-            "description": "something"
+            "description": "shortcut for workspace 7"
         },
         "8": {
             "suggested_key": {
                 "default": "Alt+8"
             },
-            "description": "something"
+            "description": "shortcut for workspace 8"
         },
         "9": {
             "suggested_key": {
                 "default": "Alt+9"
             },
-            "description": "something"
+            "description": "shortcut for workspace 9"
         },
         "show-all-tabs": {
             "suggested_key": {
                 "default": "Alt+G"
             },
-            "description": "something"
+            "description": "merge all workspaces in current window"
         }
     },
     "applications": {
