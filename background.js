@@ -79,7 +79,6 @@ async function workspace_schtick(next_workspace) {
 
   // finishing
   await browser.tabs.hide(visible_tab_ids);
-  console.log("end");
 }
 
 
