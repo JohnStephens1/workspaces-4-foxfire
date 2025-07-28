@@ -1,11 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "Tab Workspace Manager",
-    "version": "1.0",
-    "description": "Manage workspaces of tabs with memory-efficient tab discarding.",
+    "name": "Workspaces 4 Firefox",
+    "version": "1.1.0",
+    "description": "Functional workspaces in Firefox, can you believe it",
     "permissions": [
         "tabs",
-        "tabGroups",
         "tabHide",
         "storage"
     ],
