@@ -6,18 +6,30 @@
 // or suffering
 
 
-// number based sorting
 let workspaces = {
   "tab_counts": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   "active": 1
 }
+
+
+async function check_for_persistent_storage() {
+  const received_workspaces = await browser.storage.local.get(["workspaces"]);
+
+  if (Object.keys(received_workspaces).length > 0) {
+    workspaces = received_workspaces.workspaces;
+  } else {
+    await browser.storage.local.set({"workspaces": workspaces});
+  }
+}
+
 
 function is_number(string) {
   return !isNaN(parseInt(string));
 }
 
 browser.commands.onCommand.addListener(async (command) => {
-  //store_update_schtick
+  await check_for_persistent_storage();
+
   if (is_number(command)) {
     await workspace_schtick(command);
   }
@@ -27,14 +39,9 @@ browser.commands.onCommand.addListener(async (command) => {
       await show_all_tabs();
       break;
   }
-  //store_update_schtick
-  console.log();
+
+  await browser.storage.local.set({"workspaces": workspaces});
 });
-
-
-function get_start_index_of_workspace(target) {
-  return workspaces['tab_counts'].slice(0, target).reduce((a, b) => a + b, 0);
-}
 
 
 async function workspace_schtick(next_workspace) {
@@ -80,6 +87,11 @@ async function get_visible_tabs() {
   const tabs = await browser.tabs.query({ currentWindow: true });
   const visible_tabs = tabs.filter(tab => tab.hidden == false);
   return visible_tabs;
+}
+
+
+function get_start_index_of_workspace(target) {
+  return workspaces['tab_counts'].slice(0, target).reduce((a, b) => a + b, 0);
 }
 
 async function get_tabs_by_index(start, end) {
