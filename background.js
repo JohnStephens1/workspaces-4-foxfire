@@ -28,40 +28,28 @@ async function check_if_persistent_storage_exists() {
   let call2 = Promise.resolve();
 
   const received_storage = await browser.storage.local.get(["storage", "active"]);
-  // console.log("received_storage", received_storage);
-  // console.log("received_storage_length", received_storage.storage);
-  // console.log("active", received_storage.active);
 
   if (received_storage.storage) {
     storage = received_storage.storage;
-    console.log("received storage");
   } else {
     call1 = browser.storage.local.set({"storage": storage});
-    console.log("saved storage");
   }
   
   if (received_storage.active) {
     active = received_storage.active;
-    console.log("received active");
   } else {
     call2 = browser.storage.local.set({"active": active});
-    console.log("saved active");
   }
-
-  console.log("storage", storage);
-  console.log("active", active);
   
   await Promise.all([call1, call2]);
 }
 
 async function update_persistent_storage() {
   // can probably set both @ once
-  console.log("fkin active rn", active);
   const call1 = browser.storage.local.set({"storage": storage});
   const call2 = browser.storage.local.set({"active": active});
   
   await Promise.all([call1, call2]);
-  console.log("updated bs ", browser.storage.local.get());
 }
 
 
@@ -79,7 +67,7 @@ browser.commands.onCommand.addListener(async (command) => {
   }
 
   await update_persistent_storage();
-  console.log("whole fkin storage sht", await browser.storage.local.get());
+  // console.log("whole fkin storage sht", await browser.storage.local.get());
 });
 
 
@@ -90,8 +78,8 @@ async function tab_shenanigans(command) {
   if (active_workspace == command) return;
   console.log("thisshit2");
 
-  const visible_tabs = await get_visible_tabs();
-  storage[active_workspace] = visible_tabs;
+  const visible_tabs = await get_visible_tabs(); // [tab]
+  storage[active_workspace] = visible_tabs; // [tab]
 
   // hide schtick avoidance
   const temp_tab = await browser.tabs.create({});
@@ -107,9 +95,9 @@ async function tab_shenanigans(command) {
   // console.log(2);
   const old_tab_ids = visible_tabs.map(({ id }) => id);
   browser.tabs.hide(old_tab_ids);
-  console.log("ACTIVE HERE1", active);
+  // console.log("ACTIVE HERE1", active);
   set_active_workspace(command);
-  console.log("ACTIVE HERE2", active);
+  // console.log("ACTIVE HERE2", active);
   // console.log(3);
   // kill bs tab again
   const remaining_visible_tabs = await get_visible_tabs();
