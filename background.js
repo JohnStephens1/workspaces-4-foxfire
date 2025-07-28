@@ -6,6 +6,91 @@ let storage = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9:
 let active = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
+
+// testing prevent closing schtick
+browser.windows.onRemoved
+// 0
+browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+  console.log("1");
+  const le_window = await browser.windows.get(removeInfo.windowId); // crashes here
+  console.log("2");
+  const le_tabs = le_window.tabs;
+  console.log("3");
+  console.log(le_window);
+  console.log("4");
+  console.log(le_tabs);
+  console.log("5");
+
+
+
+  console.log();
+  // console.log("1");
+  // browser.tabs.create({});
+
+  // Only act if window is still open
+  if (removeInfo.isWindowClosing) {
+    // console.log("2");
+    // await browser.tabs.create({});
+    await browser.tabs.create({});
+    return;
+  }
+  // console.log("3");
+  // browser.tabs.create({});
+
+
+  // Get remaining tabs in the same window
+  // let tabs = await browser.tabs.query({ windowId: removeInfo.windowId });
+
+  // // If that was the last tab, open a new one
+  // if (tabs.length === 0) {
+  //   // Open a new tab in the same window
+  //   browser.windows.create({
+  //       url: "about:blank",
+  //       focused: true
+  //   });
+  // }
+});
+
+// 1
+// browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+//   console.log("in listener")
+//   // Only act if window is still open
+//   if (removeInfo.isWindowClosing) {
+//     return;
+//   }
+
+//   // Get remaining tabs in the same window
+//   let tabs = await browser.tabs.query({ windowId: removeInfo.windowId });
+
+//   // If that was the last tab, open a new one
+//   if (tabs.length === 0) {
+//     // Open a new tab in the same window
+//     browser.windows.create({
+//         url: "about:blank",
+//         focused: true
+//     });
+//   }
+// });
+
+// 2
+// browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+  // if (removeInfo.isWindowClosing) return;
+
+  // const tabs = await browser.tabs.query({ windowId: removeInfo.windowId });
+
+  // // The tab count here is AFTER the tab is removed, so 0 = last tab was closed
+  // if (tabs.length === 0) {
+  //     // Open a new tab in the same window
+  //     await browser.windows.create({ url: "about:blank" });
+  // }
+// });
+
+// end
+
+
+
+
+
 function is_number(string) {
   return !isNaN(parseInt(string));
 }
@@ -41,15 +126,15 @@ async function tab_shenanigans(command) {
   // get selected
   const new_tabs = storage[command];
 
-  console.log(1);
+  // console.log(1);
   const new_tab_ids = new_tabs.map(({ id }) => id);
   browser.tabs.show(new_tab_ids);
 
-  console.log(2);
+  // console.log(2);
   const old_tab_ids = visible_tabs.map(({ id }) => id);
   browser.tabs.hide(old_tab_ids);
   set_active_workspace(command);
-  console.log(3);
+  // console.log(3);
   // kill bs tab again
   const remaining_visible_tabs = await get_visible_tabs();
   if (remaining_visible_tabs.length > 1) {
