@@ -78,6 +78,5 @@
         "gecko": {
             "id": "ima-potato@isamail.com"
         }
-    },
-    "host_permissions": ["<all_urls>"]
+    }
 }
