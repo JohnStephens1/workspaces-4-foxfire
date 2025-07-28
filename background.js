@@ -6,58 +6,20 @@
 // or suffering
 
 
-// let storage = {0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}};
-let storage = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []};
-let active = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-
-// browser.storage.local.remove("imstored");
-
-// browser.storage.local.set({"imstored": "most certainly"}).then(() => {console.log("saved smth?")});
-
-// const gotten = await browser.storage.local.get("imstored");
-// console.log(gotten);
-
+// number based sorting
+let workspaces = {
+  "tab_counts": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "active": 1
+}
 
 function is_number(string) {
   return !isNaN(parseInt(string));
 }
 
-async function check_if_persistent_storage_exists() {
-  let call1 = Promise.resolve();
-  let call2 = Promise.resolve();
-
-  const received_storage = await browser.storage.local.get(["storage", "active"]);
-
-  if (received_storage.storage) {
-    storage = received_storage.storage;
-  } else {
-    call1 = browser.storage.local.set({"storage": storage});
-  }
-  
-  if (received_storage.active) {
-    active = received_storage.active;
-  } else {
-    call2 = browser.storage.local.set({"active": active});
-  }
-  
-  await Promise.all([call1, call2]);
-}
-
-async function update_persistent_storage() {
-  // can probably set both @ once
-  const call1 = browser.storage.local.set({"storage": storage});
-  const call2 = browser.storage.local.set({"active": active});
-  
-  await Promise.all([call1, call2]);
-}
-
-
 browser.commands.onCommand.addListener(async (command) => {
-  await check_if_persistent_storage_exists();
-  // show_all_tabs();
+  //store_update_schtick
   if (is_number(command)) {
-    await tab_shenanigans(command);
+    await workspace_schtick(command);
   }
 
   switch (command) {
@@ -65,45 +27,46 @@ browser.commands.onCommand.addListener(async (command) => {
       await show_all_tabs();
       break;
   }
-
-  await update_persistent_storage();
-  // console.log("whole fkin storage sht", await browser.storage.local.get());
+  //store_update_schtick
 });
 
 
-async function tab_shenanigans(command) {
-  // store current
-  console.log("thisshit1");
-  const active_workspace = get_active_workspace();
-  if (active_workspace == command) return;
-  console.log("thisshit2");
+function get_start_index_of_workspace(target) {
+  return workspaces['tab_counts'].slice(0, target).reduce((a, b) => a + b, 0);
+}
 
-  const visible_tabs = await get_visible_tabs(); // [tab]
-  storage[active_workspace] = visible_tabs; // [tab]
 
-  // hide schtick avoidance
-  const temp_tab = await browser.tabs.create({});
-  const temp_tab_id = temp_tab.id;
+async function workspace_schtick(next_workspace) {
+  const active_workspace = workspaces['active'];
+  if (next_workspace == active_workspace) return;
 
-  // get selected
-  const new_tabs = storage[command];
+  const visible_tabs = await get_visible_tabs();
+  const visible_tab_ids = visible_tabs.map(({ id }) => id);
+  const visible_tab_count = visible_tabs.length;
 
-  // console.log(1);
-  const new_tab_ids = new_tabs.map(({ id }) => id);
-  browser.tabs.show(new_tab_ids);
+  const current_workspace_start = get_start_index_of_workspace(active_workspace);
+  await browser.tabs.move(visible_tab_ids, { index: current_workspace_start });
+  
+  workspaces.tab_counts[active_workspace] = visible_tab_count;
+  workspaces.active = next_workspace;
 
-  // console.log(2);
-  const old_tab_ids = visible_tabs.map(({ id }) => id);
-  browser.tabs.hide(old_tab_ids);
-  // console.log("ACTIVE HERE1", active);
-  set_active_workspace(command);
-  // console.log("ACTIVE HERE2", active);
-  // console.log(3);
-  // kill bs tab again
-  const remaining_visible_tabs = await get_visible_tabs();
-  if (remaining_visible_tabs.length > 1) {
-    browser.tabs.remove(temp_tab_id);
+  // round two
+  const next_workspace_length = workspaces['tab_counts'][next_workspace];
+
+  if (next_workspace_length == 0) {
+    await browser.tabs.create({index: -1}); // doesn't state default; or that -1=last
+  } else {
+    const next_workspace_start = get_start_index_of_workspace(next_workspace);
+    const next_workspace_end = next_workspace_start + next_workspace_length;
+    const next_workspace_tabs = await get_tabs_by_index(next_workspace_start, next_workspace_end);
+    const next_workspace_tab_ids = next_workspace_tabs.map(({ id }) => id);
+
+    await browser.tabs.move(next_workspace_tab_ids, { index: -1 });
+    await browser.tabs.show(next_workspace_tab_ids);
   }
+
+  // finishing
+  await browser.tabs.hide(visible_tab_ids);
 }
 
 
@@ -113,15 +76,10 @@ async function get_visible_tabs() {
   return visible_tabs;
 }
 
-function set_active_workspace(command) {
-  active = active.fill(0);
-  active[parseInt(command)] = 1;
-}
-
-function get_active_workspace() {
-  const index = active.findIndex(x => x == 1);
-  if (index == -1) return 1;
-  return index;
+async function get_tabs_by_index(start, end) {
+  const all_tabs = await browser.tabs.query({ currentWindow: true });
+  const tabs = all_tabs.filter(tab => tab.index >= start && tab.index < end);
+  return tabs;
 }
 
 
@@ -129,29 +87,7 @@ function get_active_workspace() {
 async function show_all_tabs() {
   const tabs = await browser.tabs.query({ currentWindow: true });
   const tab_ids = tabs.map(({ id }) => id);
-  browser.tabs.show(tab_ids);
-  storage = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []};
-  active = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-}
-
-
-// unused
-async function hide_all_tabs() {
-  const tabs = await browser.tabs.query({ currentWindow: true });
-  const tab_ids = tabs.map(({ id }) => id);
-  browser.tabs.hide(tab_ids);
-}
-
-// unused
-async function something_save(command) {
-  const tabs = await browser.tabs.query({ currentWindow: true });
-  const visible_tabs = tabs.filter(tab => tab.hidden == false);
-  storage[command] = visible_tabs;
-}
-
-// unused
-async function something_switch(command) {
-  const tabs = await browser.tabs.query({ currentWindow: true });
-  const visible_tabs = tabs.filter(tab => tab.hidden == false);
-  storage[command] = visible_tabs;
+  await browser.tabs.show(tab_ids);
+  workspaces.active = 1;
+  workspaces.tab_counts = workspaces.tab_counts.fill(0);
 }
