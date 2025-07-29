@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Workspaces 4 Foxfire",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Functional workspaces in Firefox, can you believe it",
     "permissions": [
         "tabs",
@@ -79,6 +79,7 @@
         }
     },
     "icons": {
-        "48": "le_face_48_2.png"
+        "48": "icons/le_face_48.png",
+        "96": "icons/le_face_96.png"
     }
 }
