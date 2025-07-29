@@ -108,8 +108,16 @@ async function get_tabs_by_index(start, end) {
 
 // extra util hotkey
 async function show_all_tabs() {
-  const tabs = await browser.tabs.query({ currentWindow: true });
-  const tab_ids = tabs.map(({ id }) => id);
-  await browser.tabs.show(tab_ids);
+  const all_tabs = await browser.tabs.query({ currentWindow: true });
+  const all_tab_ids = all_tabs.map(({ id }) => id);
+
+  const visible_tabs = all_tabs.filter(tab => tab.hidden == false);
+  const visible_tab_ids = visible_tabs.map(({ id }) => id);
+
+  const active_workspace_start_index = get_start_index_of_workspace(workspaces['active']);
+
+  await browser.tabs.move(visible_tab_ids, { index: active_workspace_start_index });
+  await browser.tabs.show(all_tab_ids);
+
   workspaces = get_default_workspaces();
 }
