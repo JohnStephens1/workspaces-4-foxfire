@@ -6,9 +6,15 @@
 // or suffering
 
 
-let workspaces = {
-  "tab_counts": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  "active": 1
+let workspaces = get_default_workspaces();
+
+
+function get_default_workspaces() {
+  return {
+    "tab_counts": Array(10).fill(0),
+    "relative_focus_index": Array(10).fill(0),
+    "active": 1
+  }
 }
 
 
@@ -105,6 +111,5 @@ async function show_all_tabs() {
   const tabs = await browser.tabs.query({ currentWindow: true });
   const tab_ids = tabs.map(({ id }) => id);
   await browser.tabs.show(tab_ids);
-  workspaces.active = 1;
-  workspaces.tab_counts = workspaces.tab_counts.fill(0);
+  workspaces = get_default_workspaces();
 }
