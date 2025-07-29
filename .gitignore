@@ -12,3 +12,12 @@ dist/
 
 notes/
 background_old.dontreadme
+
+biome.json
+node_modules/
+tsconfig.json
+package.json
+package-lock.json
+.eslintrc.json
+
+*.json
