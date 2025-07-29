@@ -39,24 +39,9 @@ async function initial_storage_check() {
   if (hasSameSchema(workspaces, received_workspaces.workspaces)) {
     workspaces = received_workspaces.workspaces;
     console.log("schema same");
-    console.log("workspaces", workspaces);
-    console.log("received_workspaces", received_workspaces.workspaces);
   } else {
     await browser.storage.local.set({"workspaces": workspaces});
-    console.log("schema differs!!!");
-    console.log("workspaces", workspaces);
-    console.log("received_workspaces", received_workspaces.workspaces);
-  }
-}
-
-
-async function check_for_persistent_storage() {
-  const received_workspaces = await browser.storage.local.get(["workspaces"]);
-
-  if (Object.keys(received_workspaces).length > 0) {
-    workspaces = received_workspaces.workspaces;
-  } else {
-    await browser.storage.local.set({"workspaces": workspaces});
+    console.log("schema differs!");
   }
 }
 
@@ -67,10 +52,8 @@ function is_number(string) {
 
 
 browser.commands.onCommand.addListener(async (command) => {
-  await check_for_persistent_storage();
-
   if (is_number(command)) {
-    await workspace_schtick(command);
+    await workspace_schtick(parseInt(command));
   }
 
   switch (command) {
@@ -104,7 +87,7 @@ async function workspace_schtick(next_workspace) {
   const next_workspace_length = workspaces.tab_counts[next_workspace];
 
   if (next_workspace_length === 0) {
-    const new_tab = await browser.tabs.create({}); // can't set -1
+    const new_tab = await browser.tabs.create({});
     await browser.tabs.move(new_tab.id, { index: -1 });
     workspaces.tab_counts[next_workspace] = 1;
   } else {
