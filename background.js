@@ -58,9 +58,12 @@ async function workspace_schtick(next_workspace) {
   const visible_tab_ids = visible_tabs.map(({ id }) => id);
   const visible_tab_count = visible_tabs.length;
 
+  const relative_focused_tab_index = visible_tabs.findIndex(tab => tab.active==true);
+
   const current_workspace_start = get_start_index_of_workspace(active_workspace);
   await browser.tabs.move(visible_tab_ids, { index: current_workspace_start });
   
+  workspaces.relative_focus_index[active_workspace] = relative_focused_tab_index;
   workspaces.tab_counts[active_workspace] = visible_tab_count;
   workspaces.active = next_workspace;
 
@@ -72,15 +75,15 @@ async function workspace_schtick(next_workspace) {
     await browser.tabs.move(new_tab.id, { index: -1 });
     workspaces.tab_counts[next_workspace] = 1;
   } else {
-
     const next_workspace_start = get_start_index_of_workspace(next_workspace);
     const next_workspace_end = next_workspace_start + next_workspace_length;
     const next_workspace_tabs = await get_tabs_by_index(next_workspace_start, next_workspace_end);
     const next_workspace_tab_ids = next_workspace_tabs.map(({ id }) => id);
+    const next_workspace_focused_tab_index = workspaces.relative_focus_index[next_workspace];
 
     await browser.tabs.move(next_workspace_tab_ids, { index: -1 });
     await browser.tabs.show(next_workspace_tab_ids);
-    await browser.tabs.update(next_workspace_tab_ids[0], { active: true });
+    await browser.tabs.update(next_workspace_tab_ids[next_workspace_focused_tab_index], { active: true });
   }
 
   // finishing
