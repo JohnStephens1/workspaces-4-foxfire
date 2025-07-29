@@ -81,5 +81,9 @@
     "icons": {
         "48": "icons/le_face_48.png",
         "96": "icons/le_face_96.png"
+    },
+    "browser_action": {
+      "default_icon": "icons/le_face_48.png",
+      "default_title": "workspaces-4-foxfire"
     }
 }
